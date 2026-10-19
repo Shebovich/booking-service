@@ -1,0 +1,37 @@
+# Главный конфиг сервиса. Spring Boot читает его при старте.
+# Аналог из Android: что-то среднее между BuildConfig и res/values,
+# только читается в рантайме и переопределяется снаружи (переменные окружения, аргументы).
+
+spring:
+  application:
+    name: booking-service
+
+server:
+  port: 8080
+
+# Наши собственные настройки. Имя раздела (booking) придумываем сами.
+booking:
+  greeting: Hello
+
+# Какие служебные эндпоинты Actuator открыть по HTTP.
+# env и configprops показывают, какие настройки реально применились.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, env, configprops
+
+---
+# Всё ниже применяется ТОЛЬКО при активном профиле dev
+# и переопределяет значения выше.
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+booking:
+  greeting: Привет
+
+logging:
+  level:
+    dev.pavel: DEBUG
