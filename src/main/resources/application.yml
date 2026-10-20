@@ -12,6 +12,8 @@ server:
 # Наши собственные настройки. Имя раздела (booking) придумываем сами.
 booking:
   greeting: Hello
+  max-guests: 5
+  hold-timeout: 10m
 
 # Какие служебные эндпоинты Actuator открыть по HTTP.
 # env и configprops показывают, какие настройки реально применились.

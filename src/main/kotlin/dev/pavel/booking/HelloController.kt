@@ -1,5 +1,7 @@
 package dev.pavel.booking
 
+import dev.pavel.booking.config.BookingProperties
+import dev.pavel.booking.lab.LogTime
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -17,7 +19,7 @@ data class HelloResponse(
 
 // @RestController: Spring сам создаст этот класс (как Hilt) и будет отдавать ответы методов как JSON.
 @RestController
-class HelloController(@Value("\${booking.greeting}") private val greeting: String) {
+class HelloController(private val props: BookingProperties) {
 
     @OptIn(ExperimentalAtomicApi::class)
     private val counter = AtomicLong(0)
@@ -25,6 +27,7 @@ class HelloController(@Value("\${booking.greeting}") private val greeting: Strin
     // @GetMapping: этот метод отвечает на GET http://localhost:8080/api/hello
     // Аналог @GET("/api/hello") из Retrofit, только на стороне сервера.
     @OptIn(ExperimentalAtomicApi::class)
+    @LogTime
     @GetMapping("/api/hello")
     fun hello(
         // @RequestParam: берёт ?name=... из адреса (аналог @Query в Retrofit).
@@ -32,7 +35,7 @@ class HelloController(@Value("\${booking.greeting}") private val greeting: Strin
         @RequestParam(defaultValue = "world") name: String
     ): HelloResponse {
         return HelloResponse(
-            message = "$greeting, $name",
+            message = "${props.greeting}, $name",
             // Имя потока Tomcat, который обработал этот запрос.
             servedBy = Thread.currentThread().name,
             requestNumber = counter.incrementAndFetch()

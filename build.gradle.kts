@@ -14,6 +14,12 @@ java {
 	}
 }
 
+// В проекте два файла с fun main(): само приложение и учебный lab/HandMadeProxy.kt.
+// Явно говорим плагину Spring Boot, какой из них запускать в bootRun и класть в jar.
+springBoot {
+	mainClass = "dev.pavel.booking.BookingServiceApplicationKt"
+}
+
 repositories {
 	mavenCentral()
 }
