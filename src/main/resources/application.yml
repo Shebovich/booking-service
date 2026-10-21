@@ -2,6 +2,10 @@
 # Аналог из Android: что-то среднее между BuildConfig и res/values,
 # только читается в рантайме и переопределяется снаружи (переменные окружения, аргументы).
 
+springdoc:
+  paths-to-match:
+    - /api/v1/**
+
 spring:
   application:
     name: booking-service

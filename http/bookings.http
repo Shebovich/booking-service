@@ -1,0 +1,52 @@
+### День 3. Запросы к API броней.
+### Как запускать: зелёный треугольник слева от строки с методом (GET/POST...).
+### Ответ откроется снизу, в окне Services. Приложение должно быть запущено.
+### Аналог: Postman, только прямо в IntelliJ и лежит в git вместе с кодом.
+
+### 1. Создать бронь. Ждём 201 Created + заголовок Location.
+POST http://localhost:8080/api/v1/bookings
+Content-Type: application/json
+
+{
+  "guestName": "Pavel",
+  "roomId": "101",
+  "checkIn": "2026-11-01",
+  "checkOut": "2026-11-05",
+  "guests": 2
+}
+
+### 2. Список всех броней. Ждём 200 OK.
+GET http://localhost:8080/api/v1/bookings
+
+### 3. Одна бронь. Вставь вместо <id> значение из ответа на запрос 1.
+GET http://localhost:8080/api/v1/bookings/<id>
+
+### 4. Несуществующая бронь. Что вернёт сервер? Какой статус ПРАВИЛЬНЫЙ?
+GET http://localhost:8080/api/v1/bookings/00000000-0000-0000-0000-000000000000
+
+### 5. Кривой id (не UUID). Какой статус?
+GET http://localhost:8080/api/v1/bookings/abc
+
+### 6. Явно плохие данные: пустое имя, выезд раньше заезда, -3 гостя. Что вернёт сервер?
+POST http://localhost:8080/api/v1/bookings
+Content-Type: application/json
+
+{
+  "guestName": "",
+  "roomId": "101",
+  "checkIn": "2026-11-05",
+  "checkOut": "2026-11-01",
+  "guests": -3
+}
+
+### 8. Страница: 2 брони, сортировка по дате заезда, сначала поздние. Создай заранее 3-5 броней запросом 1.
+GET http://localhost:8080/api/v1/bookings?page=0&size=2&sortBy=CHECK_IN&direction=DESC
+
+### 9. Слишком большая страница. Какой статус? Понятно ли из ответа, что не так?
+GET http://localhost:8080/api/v1/bookings?size=500
+
+### 10. Сортировка по полю, которого нет в списке разрешённых.
+GET http://localhost:8080/api/v1/bookings?sortBy=password
+
+### 7. Удалить бронь (заработает после твоего TODO в BookingController). Ждём 204 No Content.
+DELETE http://localhost:8080/api/v1/bookings/f5bdc72f-a2ce-43c0-a955-bc6037c3115c

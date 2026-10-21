@@ -41,6 +41,7 @@
 
 - [x] День 1: окружение, первый эндпоинт, конфиги и профили
 - [x] День 2: Spring Core — жизненный цикл бинов, scope, прокси, self-invocation, @ConfigurationProperties
+- [x] День 3: REST API — CRUD броней, Bean Validation (+ свой валидатор), ProblemDetail через @RestControllerAdvice, пагинация и сортировка, Swagger UI (springdoc)
 
 ## DI: Spring vs Dagger/Hilt
 
