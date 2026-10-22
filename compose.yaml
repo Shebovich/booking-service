@@ -1,0 +1,35 @@
+# День 4. Локальная инфраструктура для разработки: пока только PostgreSQL.
+# Запуск:     docker compose up -d      (-d = в фоне)
+# Остановка:  docker compose down       (данные сохранятся в томе pgdata)
+# Сброс базы: docker compose down -v    (-v = удалить и том — все данные пропадут)
+#
+# Аналог из Android: как эмулятор, который ты поднимаешь для разработки.
+# Ничего не ставим в Windows — Postgres живёт в контейнере, удалил контейнер — система чистая.
+services:
+  postgres:
+    # Версия 18 — текущая стабильная (19 пока RC, на 2026-10-21). Тег мажорной версии:
+    # минорные обновления (18.6 -> 18.7) с исправлениями приходят сами при docker compose pull.
+    image: postgres:18
+    container_name: booking-postgres
+    environment:
+      # Пароль только для локальной разработки. В проде секреты так не хранят (будет на дне про деплой).
+      POSTGRES_USER: booking
+      POSTGRES_PASSWORD: booking
+      POSTGRES_DB: booking
+    ports:
+      # "порт_на_твоём_компе:порт_в_контейнере"
+      - "5432:5432"
+    volumes:
+      # Том: данные базы переживут перезапуск контейнера.
+      # С версии 18 образ хранит данные в /var/lib/postgresql/18/docker, поэтому том монтируем
+      # на /var/lib/postgresql (так требует описание образа на Docker Hub).
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      # Docker сам проверяет, что база уже принимает подключения, а не просто «контейнер запущен».
+      test: ["CMD-SHELL", "pg_isready -U booking -d booking"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
