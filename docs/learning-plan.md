@@ -107,16 +107,16 @@
 > Мини-собес: идемпотентность 5.5, PUT/PATCH 7, статусы 5.5, DispatcherServlet 5.5, Filter/Interceptor/AOP 4.5; среднее 5.6.
 > Повторить: определение идемпотентности (N запросов = 1, не «не меняет»), PATCH «не обязан» быть идемпотентным, Idempotency-Key, НЕ GET для изменений; 409 Conflict (тест: успех при другом состоянии сервера), 403 vs 404/IDOR, 422 vs 400; цепочка Filter -> HandlerMapping -> ArgumentResolver (+@Valid) -> метод -> MessageConverter -> HandlerExceptionResolver -> /error; отвечать на все подвопросы.
 
-### День 4. PostgreSQL: SQL, индексы, транзакции — в работе
+### День 4. PostgreSQL: SQL, индексы, транзакции — готово
 
 *Теория, Практика*. SQL и Postgres проверяют на любом бэкенд-собеседовании. Цель: писать JOIN и GROUP BY без раздумий, читать EXPLAIN и знать уровни изоляции.
 
 Задачи:
 - [x] Поднять Postgres в Docker, подключиться из IDE
-- [ ] pgexercises.com: разделы Basic, Joins, Aggregates
-- [ ] LeetCode SQL 50: первые 15 задач
-- [ ] На таблице с 1 млн строк сравнить EXPLAIN ANALYZE до и после индекса
-- [ ] Воспроизвести non-repeatable read на Read Committed в двух сессиях
+- [x] pgexercises.com: разделы Basic, Joins, Aggregates
+- [ ] LeetCode SQL 50: первые 15 задач (отложено под live coding)
+- [x] На таблице с 1 млн строк сравнить EXPLAIN ANALYZE до и после индекса
+- [x] Воспроизвести non-repeatable read на Read Committed в двух сессиях
 
 Вопросы к собеседованию:
 - Как устроен B-tree индекс и когда он не используется?
@@ -132,7 +132,11 @@
 
 Заметки:
 
-> Postgres 18.6 в Docker (compose.yaml, том на /var/lib/postgresql — требование образа 18+). DB-клиент IntelliJ бесплатен в unified-версии.
+> Postgres 18.6 в Docker (compose.yaml). Лабы: sql/explain-lab.sql (индексы, EXPLAIN, skip scan PG18, text_pattern_ops, Index Only Scan + VACUUM), sql/transactions-lab.sql (RC/RR, could not serialize, lost update). Конспект: docs/theory/day-04-postgres.md. Коммиты fee422a, 0e43cf6, 40297eb.
+> pgexercises Joins/Aggregates — решения на другой машине, не запушены.
+>
+> Мини-собес 5.4/10: JOIN ON/WHERE+count 7; функция над колонкой 5; составной индекс 4; селективность/частичный индекс 4; MVCC/VACUUM 7; изоляция/аномалии 8; lost update 3; «запрос тормозит» 5.
+> Подтянуть к дню 7: order by по 2-й колонке составного индекса (сортировки нет), порядок колонок (= потом диапазон); unique (дубликаты) vs атомарный UPDATE/for update/@Version (lost update); частичный индекс; pg_stat_statements = статистика запросов, размеры = pg_relation_size; create index concurrently; оптимистичная блокировка для долгих форм; отвечать механизмом и на все пункты.
 
 ### День 5. Spring Data JPA, Hibernate, миграции — не начат
 
