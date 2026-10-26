@@ -9,6 +9,16 @@ springdoc:
 spring:
   application:
     name: booking-service
+  # TODO День 5, шаг 1: подключение к базе — внутри spring: (на одном уровне с application:)
+  #   datasource:
+  #     url:       jdbc:postgresql://<хост>:<порт>/<база>   — значения возьми из compose.yaml
+  #     username:  ...
+  #     password:  ...
+  #   jpa:
+  #     open-in-view: false     — почему false, разберём на шаге 2 (по умолчанию true, и Spring об этом предупреждает в логе)
+  #     hibernate:
+  #       ddl-auto: validate    — Hibernate НЕ создаёт таблицы, а только сверяет сущности со схемой. Таблицы создаёт Flyway.
+  # Пароль прямо в yml — только для локальной разработки, в проде секреты так не хранят.
 
 server:
   port: 8080
