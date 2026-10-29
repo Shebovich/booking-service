@@ -9,6 +9,10 @@ import java.util.concurrent.ConcurrentHashMap
 //
 // ConcurrentHashMap, а не обычный HashMap — вспомни день 1:
 // бин один, а запросы идут из 200 потоков Tomcat одновременно.
+// TODO День 5, шаг 2: замени этот класс на интерфейс, который наследует JpaRepository<сущность, тип id>.
+//   Реализацию (save, findById, findAll, deleteById, existsById, findAll(Pageable)...) Spring создаст сам при старте.
+//   @Repository и ConcurrentHashMap больше не нужны: потоки разведёт база (MVCC из дня 4).
+//   После замены сервис перестанет компилироваться — это и есть следующая часть задания (BookingService.kt).
 @Repository
 class BookingRepository {
 

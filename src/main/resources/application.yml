@@ -27,6 +27,11 @@ spring:
 server:
   port: 8080
 
+# TODO День 5, шаг 2: включи лог SQL, чтобы видеть, что Hibernate шлёт в базу:
+#   logging.level.org.hibernate.SQL: DEBUG              — сами запросы
+#   logging.level.org.hibernate.orm.jdbc.bind: TRACE    — значения параметров вместо «?»
+# В yml это вложенные ключи: logging: -> level: -> org.hibernate.SQL: DEBUG
+
 # Наши собственные настройки. Имя раздела (booking) придумываем сами.
 booking:
   greeting: Hello

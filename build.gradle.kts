@@ -1,6 +1,8 @@
 plugins {
 	kotlin("jvm") version "2.3.21"
 	kotlin("plugin.spring") version "2.3.21"
+	// TODO День 5, шаг 2: добавь плагин kotlin("plugin.jpa") той же версии, что и остальные kotlin-плагины.
+	//   Он генерирует пустой конструктор для классов с @Entity: Hibernate создаёт объект пустым, а поля заполняет потом.
 	id("org.springframework.boot") version "4.1.1"
 	id("io.spring.dependency-management") version "1.1.7"
 }
@@ -53,6 +55,11 @@ kotlin {
 		freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
 	}
 }
+
+// TODO День 5, шаг 2: блок allOpen { annotation("...") } — открыть (снять final) классы с аннотациями
+//   jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass, jakarta.persistence.Embeddable.
+//   Зачем: для LAZY-связей Hibernate создаёт НАСЛЕДНИКА сущности (прокси), а от final-класса наследоваться нельзя.
+//   plugin.spring открывает только Spring-аннотации (@Service, @Component...), про @Entity он не знает.
 
 tasks.withType<Test> {
 	useJUnitPlatform()

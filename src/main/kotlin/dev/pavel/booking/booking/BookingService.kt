@@ -8,6 +8,19 @@ import java.util.UUID
 // День 3. Бизнес-логика. Здесь решается «что можно, а что нельзя» с бронью.
 // Сервис ничего не знает про HTTP: ни статусов, ни заголовков, ни JSON.
 // Поэтому его легко тестировать и можно вызвать откуда угодно (из Kafka-консьюмера на дне 15, например).
+// TODO День 5, шаг 2: переведи сервис на JpaRepository.
+//   - @Transactional (org.springframework.transaction.annotation) на методы, которые пишут: create, delete;
+//     @Transactional(readOnly = true) — на методы, которые только читают.
+//   - findById: JpaRepository.findById возвращает Optional. В Kotlin есть расширение findByIdOrNull
+//     (org.springframework.data.repository.findByIdOrNull) — оно вернёт Booking?.
+//   - delete: deleteById ничего не возвращает. Как узнать, была ли бронь? Есть метод existsById.
+//   - findPage: сортировку и LIMIT/OFFSET должна сделать база, а не Kotlin.
+//       PageRequest.of(page, size, Sort.by(направление, "имяПоляВСущности")) -> repository.findAll(pageable) -> Page<Booking>.
+//       Имя поля — Kotlin-имя (createdAt), не колонка (created_at). Переведи BookingSortField в эту строку через when.
+//       Добавь вторую сортировку по id (.and(Sort.by("id"))): при одинаковых значениях порядок станет стабильным,
+//       и записи не будут «прыгать» между страницами.
+//       Из Page возьми content, totalElements, totalPages и собери наш PageResponse.
+//   - findAll() без страниц можно удалить, если он нигде не используется (проверь через Find Usages).
 @Service
 class BookingService(
     private val repository: BookingRepository,
