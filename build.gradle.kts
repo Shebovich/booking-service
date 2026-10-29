@@ -31,11 +31,11 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
 	// TODO День 5, шаг 1: добавь четыре зависимости (версии не пиши — их задаёт Spring Boot):
-	//   1) стартер JPA:            implementation  org.springframework.boot:spring-boot-starter-data-jpa
-	//   2) стартер Flyway:         implementation  org.springframework.boot:spring-boot-starter-flyway
+	implementation  ("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation  ("org.springframework.boot:spring-boot-starter-flyway")
 	//   3) поддержка Postgres во Flyway (с Flyway 10 базы вынесены в отдельные модули):
-	//                              implementation  org.flywaydb:flyway-database-postgresql
-	//   4) JDBC-драйвер Postgres:  runtimeOnly     org.postgresql:postgresql
+	implementation  ("org.flywaydb:flyway-database-postgresql")
+	runtimeOnly     ("org.postgresql:postgresql")
 	//      Почему runtimeOnly: наш код не вызывает классы драйвера напрямую, он нужен только при запуске.
 	//      Аналог в Android — зависимость, которая есть в APK, но не видна при компиляции.
 	// Проверено 2026-10-26 на Maven Central: Boot 4.1.1 задаёт Hibernate 7.4.5, Flyway 12.4.0, драйвер 42.7.13.

@@ -9,16 +9,20 @@ springdoc:
 spring:
   application:
     name: booking-service
-  # TODO День 5, шаг 1: подключение к базе — внутри spring: (на одном уровне с application:)
-  #   datasource:
-  #     url:       jdbc:postgresql://<хост>:<порт>/<база>   — значения возьми из compose.yaml
-  #     username:  ...
-  #     password:  ...
-  #   jpa:
-  #     open-in-view: false     — почему false, разберём на шаге 2 (по умолчанию true, и Spring об этом предупреждает в логе)
-  #     hibernate:
-  #       ddl-auto: validate    — Hibernate НЕ создаёт таблицы, а только сверяет сущности со схемой. Таблицы создаёт Flyway.
+  # День 5: подключение к базе. Значения — из compose.yaml (порт 5432, база/логин/пароль booking).
   # Пароль прямо в yml — только для локальной разработки, в проде секреты так не хранят.
+  datasource:
+    # jdbc:postgresql://<хост>:<порт>/<база>
+    url: jdbc:postgresql://localhost:5432/booking
+    username: booking
+    password: booking
+  jpa:
+    # OSIV выключен: EntityManager живёт только внутри транзакции, а не весь HTTP-запрос.
+    # Ленивые связи вне сервиса не загрузятся тихо — упадут LazyInitializationException (подробно на шаге 2).
+    open-in-view: false
+    hibernate:
+      # Hibernate НЕ создаёт таблицы, а только сверяет сущности со схемой при старте. Таблицы создаёт Flyway.
+      ddl-auto: validate
 
 server:
   port: 8080

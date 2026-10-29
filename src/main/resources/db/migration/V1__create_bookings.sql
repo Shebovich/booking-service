@@ -14,3 +14,17 @@
 --   - все поля обязательные -> not null; id -> primary key;
 --   - инварианты держит база (вывод дня 4): добавь check-ограничения
 --     «гостей от 1 до 20» и «выезд позже заезда».
+-- Как читать: create table <имя> ( <колонка> <тип> <ограничения>, ... , <ограничения таблицы> );
+create table bookings (
+    id          uuid        primary key,          -- primary key = not null + уникальность + индекс
+    guest_name  text        not null,
+    room_id     text        not null,
+    check_in    date        not null,
+    check_out   date        not null,
+    -- check у колонки: база отклонит INSERT/UPDATE, если условие ложно
+    guests      int         not null check (guests between 1 and 20),
+    status      text        not null,
+    created_at  timestamptz not null,
+    -- check уровня таблицы: сравнивает две колонки, поэтому пишется отдельной строкой после колонок
+    check (check_out > check_in)
+);
