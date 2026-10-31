@@ -1,11 +1,28 @@
 # Прогресс и как продолжить
 
-Обновлено: 2026-10-26. Полный план по дням — в [learning-plan.md](learning-plan.md).
+Обновлено: 2026-10-31. Полный план по дням — в [learning-plan.md](learning-plan.md).
 Доска с живым прогрессом: https://claude.ai/artifact/AdexrCZWNdHTP4vjjRhS3D (открывается с любого устройства под тем же аккаунтом claude.ai).
 
 ## Где остановились
 
-**День 4 завершён. Следующий — день 5 «Spring Data JPA, Hibernate, миграции»** (перевести сервис с in-memory на Postgres через JPA, Flyway, N+1, границы транзакций, `@Version`).
+**День 5 «Spring Data JPA, Hibernate, миграции» — в процессе.** Конспект: [theory/day-05-jpa.md](theory/day-05-jpa.md).
+
+Сделано в дне 5:
+- шаг 1 — Postgres + Flyway: зависимости, `datasource`/`jpa` в `application.yml` (`open-in-view: false`, `ddl-auto: validate`),
+  миграция `V1__create_bookings.sql` применена (лабораторные таблицы дня 4 из базы удалены; V1 больше не менять — checksum);
+- шаг 2 — `Booking` стал `@Entity`, `plugin.jpa` + `allOpen`, лог SQL, `BookingRepository : JpaRepository<Booking, UUID>`,
+  сервис с `@Transactional`, пагинация и сортировка в базе (`PageRequest` + `Sort` + `.and(Sort.by("id"))`). CRUD проверен (коммит `51cd268`).
+- **на другой машине** в базе ещё лежат таблицы лабораторных дня 4 — Flyway упадёт с «Found non-empty schema(s)». Перед первым
+  запуском: `docker exec booking-postgres psql -U booking -d booking -c "drop table if exists lab_bookings, accounts;"`.
+  Файлы из `db/migration` руками не запускать — их выполняет только Flyway.
+
+**Следующее — шаг 2.6, три загадки в логе SQL** (запустить приложение, повторить вызовы в Swagger, ответить своими словами):
+1. POST: почему перед `insert` идёт `select ... where id=?` и два способа починить (подсказка: правило isNew);
+2. DELETE даёт три запроса (`count`, `select`, `delete`) — откуда каждый;
+3. в списке нет `select count(*)` — почему (создать броней больше, чем `size`, и посмотреть снова).
+
+Дальше по плану дня 5: починить SELECT перед INSERT (nullable `@Version` или `Persistable`) → связи Room/User и N+1
+(JOIN FETCH / `@EntityGraph`) → propagation REQUIRED vs REQUIRES_NEW → `@Version` и двойная бронь → мини-собес → README/progress/доска.
 
 Итоги дня 4:
 - Postgres 18 в Docker (`compose.yaml`). Если после сбоя Docker база не отвечает — `docker compose up -d`
